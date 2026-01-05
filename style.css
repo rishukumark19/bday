@@ -194,15 +194,74 @@ body.dark-mode {
 .note {
   position: relative;
   z-index: 500;
-  min-height: 100vh;
+  min-height: 120vh; /* Increased to allow scroll progress for reveal */
   padding: 10vh 2rem;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
 }
 
-.note pre {
+.pixel-wrapper {
+  position: relative;
   max-width: 800px;
+  width: 100%;
+  margin: 2rem auto;
+}
+
+.pixel-overlay {
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(15px) contrast(0.8);
+  background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.1) 0px,
+      rgba(0, 0, 0, 0.1) 2px,
+      transparent 2px,
+      transparent 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.1) 0px,
+      rgba(0, 0, 0, 0.1) 2px,
+      transparent 2px,
+      transparent 4px
+    );
+  pointer-events: none;
+  z-index: 10;
+  border-radius: 24px;
+  transition: opacity 0.5s ease;
+}
+
+body.dark-mode .pixel-overlay {
+  background: repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.05) 0px,
+      rgba(255, 255, 255, 0.05) 2px,
+      transparent 2px,
+      transparent 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.05) 0px,
+      rgba(255, 255, 255, 0.05) 2px,
+      transparent 2px,
+      transparent 4px
+    );
+}
+
+.unlock-hint {
+  font-family: "Outfit", sans-serif;
+  font-size: 1rem;
+  opacity: 0.6;
+  margin-bottom: 1rem;
+  text-transform: lowercase;
+  letter-spacing: 1px;
+  transition: opacity 0.5s ease;
+}
+
+.note pre {
+  width: 100%;
   padding: 3rem;
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.4);
@@ -214,6 +273,8 @@ body.dark-mode {
   word-wrap: break-word;
   color: inherit;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  z-index: 5;
 }
 
 body.dark-mode .note pre {

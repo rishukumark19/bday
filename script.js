@@ -6,6 +6,9 @@ const clutcherVideo = document.getElementById("clutcher-video");
 const reveal = document.querySelector(".reveal");
 const sidebarClutcher = document.getElementById("sidebar-clutcher");
 const scrollCue = document.getElementById("scroll-cue");
+const pixelOverlay = document.querySelector(".pixel-overlay");
+const pixelWrapper = document.querySelector(".pixel-wrapper");
+const unlockHint = document.querySelector(".unlock-hint");
 
 // Scroll Cue Click Handler
 if (scrollCue) {
@@ -145,10 +148,26 @@ function updateScrollAnimations() {
     }
   }
 
-  // 3. Reveal the note
-  if (reveal) {
-    const revealRect = reveal.getBoundingClientRect();
-    if (revealRect.top < windowHeight * 0.75) {
+  // 3. Pixel Reveal & Reveal the note
+  if (pixelWrapper) {
+    const rect = pixelWrapper.getBoundingClientRect();
+    const triggerPoint = windowHeight * 0.8;
+    const endPoint = windowHeight * 0.3;
+
+    // Calculate progress through the trigger zone
+    const revealProgress = Math.min(
+      Math.max((triggerPoint - rect.top) / (triggerPoint - endPoint), 0),
+      1
+    );
+
+    if (pixelOverlay) {
+      pixelOverlay.style.opacity = 1 - revealProgress;
+    }
+    if (unlockHint) {
+      unlockHint.style.opacity = 0.6 * (1 - revealProgress);
+    }
+
+    if (revealProgress > 0.1 && reveal) {
       reveal.classList.add("visible");
     }
   }
