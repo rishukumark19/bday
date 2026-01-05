@@ -11,6 +11,172 @@ const pixelWrapper = document.querySelector(".pixel-wrapper");
 const unlockHint = document.querySelector(".unlock-hint");
 const themeToggle = document.getElementById("theme-toggle");
 const themeIcon = document.getElementById("theme-icon");
+const cursorCat = document.getElementById("cursor-cat");
+const pixelRevealBtn = document.getElementById("pixel-reveal-btn");
+
+// --- QUIZ DATA ---
+const quizData = [
+  {
+    title: "Pick one!",
+    type: "comparison",
+    left: "Idli",
+    right: "Dosa",
+    symbols: ["<", ">"],
+  },
+  {
+    title: "The sweeter choice?",
+    type: "comparison",
+    left: "Tiramisu",
+    right: "Gadbad",
+    symbols: ["<", ">"],
+  },
+  {
+    title: "Ghee or Sukka?",
+    type: "comparison",
+    left: "Chicken Ghee Roast",
+    right: "Chicken Sukka",
+    symbols: ["<", ">"],
+  },
+];
+
+let currentQuizStep = 0;
+const quizContainer = document.getElementById("quiz-container");
+const quizOptions = document.getElementById("quiz-options");
+const quizTitle = document.getElementById("quiz-question-title");
+const quizDots = document.getElementById("quiz-step-dots");
+
+function showQuizStep(step) {
+  if (step >= quizData.length) {
+    revealNoteFinal();
+    return;
+  }
+
+  const data = quizData[step];
+  quizTitle.textContent = data.title;
+  quizOptions.innerHTML = "";
+
+  // Progress Dots
+  quizDots.innerHTML = quizData
+    .map((_, i) => `<span class="dot ${i === step ? "active" : ""}"></span>`)
+    .join("");
+
+  if (data.type === "comparison") {
+    const row = document.createElement("div");
+    row.className = "quiz-row";
+    row.innerHTML = `
+      <span>${data.left}</span>
+      <button class="quiz-btn symbol">${data.symbols[0]}</button>
+      <button class="quiz-btn symbol">${data.symbols[1]}</button>
+      <span>${data.right}</span>
+    `;
+    quizOptions.appendChild(row);
+  } else {
+    data.options.forEach((opt) => {
+      const btn = document.createElement("button");
+      btn.className = "quiz-btn";
+      btn.textContent = opt;
+      quizOptions.appendChild(btn);
+    });
+  }
+
+  // Add click listeners to all buttons in this step
+  quizOptions.querySelectorAll("button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      currentQuizStep++;
+      quizOptions.style.opacity = "0";
+      setTimeout(() => {
+        quizOptions.style.opacity = "1";
+        showQuizStep(currentQuizStep);
+      }, 300);
+    });
+  });
+}
+
+function revealNoteFinal() {
+  const noteSection = pixelRevealBtn.closest(".note");
+  if (quizContainer) quizContainer.style.display = "none";
+  if (noteSection) noteSection.classList.add("expanded");
+
+  if (pixelOverlay) {
+    pixelOverlay.classList.add("active");
+    setTimeout(() => {
+      pixelOverlay.style.opacity = "0";
+      pixelOverlay.style.pointerEvents = "none";
+    }, 50);
+  }
+  if (reveal) {
+    reveal.style.display = "block";
+    setTimeout(() => {
+      reveal.classList.add("visible");
+    }, 50);
+  }
+}
+
+// Memory Chest Reveal Logic
+if (pixelRevealBtn) {
+  pixelRevealBtn.addEventListener("click", () => {
+    // Fade out and remove the chest
+    pixelRevealBtn.style.opacity = "0";
+    pixelRevealBtn.style.transform = "scale(0.5)";
+    setTimeout(() => {
+      pixelRevealBtn.style.display = "none";
+      // Start Quiz instead of direct reveal
+      if (quizContainer) {
+        quizContainer.style.display = "block";
+        showQuizStep(0);
+      }
+    }, 600);
+  });
+}
+
+// Cursor Labubu Logic
+let mouseX = 0;
+let mouseY = 0;
+let catX = 0;
+let catY = 0;
+let isMoving = false;
+let moveTimeout;
+
+document.addEventListener("mousemove", (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+
+  // Detect movement for "walking"
+  isMoving = true;
+  if (cursorCat) cursorCat.classList.add("walking");
+
+  clearTimeout(moveTimeout);
+  moveTimeout = setTimeout(() => {
+    isMoving = false;
+    if (cursorCat) cursorCat.classList.remove("walking");
+  }, 150);
+});
+
+function animateCat() {
+  const dx = mouseX - catX;
+  const dy = mouseY - catY;
+
+  // Smoother follow
+  catX += dx * 0.08;
+  catY += dy * 0.08;
+
+  if (cursorCat) {
+    cursorCat.style.left = `${catX}px`;
+    cursorCat.style.top = `${catY}px`;
+
+    // Flip based on direction
+    if (Math.abs(dx) > 1) {
+      // If moving right (dx > 0), flip horizontally if your image points left by default
+      // Usually, images point right. If labubu points left, scaleX(-1) if moving right.
+      cursorCat.style.transform = `translate(-50%, -50%) scaleX(${
+        dx > 0 ? -1 : 1
+      })`;
+    }
+  }
+
+  requestAnimationFrame(animateCat);
+}
+animateCat();
 
 // Scroll Cue Click Handler
 if (scrollCue) {
@@ -124,32 +290,7 @@ function updateScrollAnimations() {
     }
   }
 
-  // --- STAGE 3: PIXEL REVEAL ---
-  if (pixelWrapper) {
-    const rect = pixelWrapper.getBoundingClientRect();
-    const trigger = windowHeight * 0.9;
-    const finish = windowHeight * 0.3;
-
-    const revealProgress = Math.min(
-      Math.max((trigger - rect.top) / (trigger - finish), 0),
-      1
-    );
-
-    if (pixelOverlay) {
-      pixelOverlay.style.opacity = 1 - revealProgress;
-      const currentBlur = 20 * (1 - revealProgress);
-      pixelOverlay.style.backdropFilter = `blur(${currentBlur}px) contrast(0.7)`;
-    }
-
-    if (unlockHint) {
-      unlockHint.style.opacity = 0.6 * (1 - revealProgress);
-      unlockHint.style.transform = `translateY(${-p2Progress * 30}px)`;
-    }
-
-    if (revealProgress > 0.01 && reveal) {
-      reveal.classList.add("visible");
-    }
-  }
+  // --- STAGE 3: NO AUTO-REVEAL ---
 }
 
 // Event Listeners

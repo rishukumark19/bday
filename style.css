@@ -18,6 +18,52 @@ body {
   font-family: "Inter", sans-serif;
 }
 
+/* CURSOR LABUBU */
+.cat-follower {
+  position: fixed;
+  width: 90px;
+  height: auto;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  display: none;
+  mix-blend-mode: multiply; /* Makes white background transparent */
+  filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
+}
+
+@media (pointer: fine) {
+  .cat-follower {
+    display: block;
+  }
+}
+
+.cat-follower img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.2s ease;
+}
+
+/* Walking Bob Animation */
+@keyframes walkBob {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+  75% {
+    transform: translateY(-10px) rotate(-5deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+.cat-follower.walking img {
+  animation: walkBob 0.6s infinite ease-in-out;
+}
+
 body.dark-mode {
   background: #dfe4e5; /* Keeping same to avoid video mismatch */
   color: #1a1a1a;
@@ -183,18 +229,185 @@ body.dark-mode {
 .note {
   position: relative;
   z-index: 500;
-  min-height: 150vh;
-  padding: 20vh 2rem;
+  min-height: 40vh; /* Sit tightly around the chest initially */
+  padding: 10vh 2rem;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  transition: min-height 1s ease;
+}
+
+.note.expanded {
+  min-height: 100vh;
 }
 
 .pixel-wrapper {
   position: relative;
   max-width: 800px;
   width: 100%;
+}
+
+/* MEMORY CHEST */
+.chest-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 3rem;
+  position: relative;
+  z-index: 200;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.chest-container:hover {
+  transform: scale(1.1);
+}
+
+.pixel-chest {
+  width: 120px;
+  height: auto;
+  image-rendering: pixelated;
+  /* Add a pulse effect when hovering */
+}
+
+.chest-hint {
+  font-family: "Outfit", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+  background: white;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  animation: bob 2s infinite ease-in-out;
+}
+
+.chest-hint::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid white;
+}
+
+.arrow {
+  display: inline-block;
+  margin-left: 5px;
+  color: #d9534f;
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* QUIZ STYLES */
+.quiz-overlay {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 300;
+  width: 90%;
+  max-width: 450px;
+  animation: fadeInQuiz 0.5s ease forwards;
+}
+
+@keyframes fadeInQuiz {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -40%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.quiz-card {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 32px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.quiz-card h3 {
+  font-family: "Outfit", sans-serif;
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.quiz-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.quiz-btn {
+  background: #f0ede8;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 16px;
+  font-size: 1.1rem;
+  color: #444;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.quiz-btn:hover {
+  background: #1a1a1a;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.quiz-btn.symbol {
+  font-family: monospace;
+  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+  background: #e5e0d8;
+}
+
+.quiz-progress {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background: #ddd;
+  border-radius: 50%;
+}
+
+.dot.active {
+  background: #1a1a1a;
+  width: 20px;
+  border-radius: 10px;
 }
 
 .pixel-overlay {
@@ -207,6 +420,12 @@ body.dark-mode {
   pointer-events: none;
   z-index: 10;
   border-radius: 24px;
+  transition: opacity 1s ease;
+  display: none; /* Hide until chest clicked */
+}
+
+.pixel-overlay.active {
+  display: block;
 }
 
 .note pre {
@@ -227,9 +446,11 @@ body.dark-mode {
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 1.5s ease, transform 1.5s ease;
+  display: none; /* Occupy no space */
 }
 
 .reveal.visible {
+  display: block;
   opacity: 1;
   transform: translateY(0);
 }
@@ -410,6 +631,14 @@ body.dark-mode {
   width: 100%;
   max-width: 900px;
   height: auto;
+  filter: blur(3px) saturate(0.8) brightness(0.95); /* Little blurry */
+  opacity: 0.7; /* Hazy feel */
+  transition: filter 1s ease, opacity 1s ease;
+}
+
+.footer-reveal:hover img {
+  filter: blur(0px) saturate(1) brightness(1);
+  opacity: 1;
 }
 
 @media (max-width: 600px) {
