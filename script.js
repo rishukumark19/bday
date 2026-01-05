@@ -9,12 +9,14 @@ const scrollCue = document.getElementById("scroll-cue");
 const pixelOverlay = document.querySelector(".pixel-overlay");
 const pixelWrapper = document.querySelector(".pixel-wrapper");
 const unlockHint = document.querySelector(".unlock-hint");
+const themeToggle = document.getElementById("theme-toggle");
+const themeIcon = document.getElementById("theme-icon");
 
 // Scroll Cue Click Handler
 if (scrollCue) {
   scrollCue.addEventListener("click", () => {
     window.scrollTo({
-      top: window.innerHeight * 0.5,
+      top: window.innerHeight * 0.8,
       behavior: "smooth",
     });
   });
@@ -26,83 +28,77 @@ function updateScrollAnimations() {
   const docHeight = document.documentElement.scrollHeight;
   const totalScroll = docHeight - windowHeight;
 
-  // 0. Update Sidebar Clutcher Progress
+  // 0. Update Sidebar Clutcher (Always runs)
   if (sidebarClutcher) {
-    const scrollPercent = scrollPos / totalScroll;
+    const scrollPercent = Math.min(Math.max(scrollPos / totalScroll, 0), 1);
     const startPos = windowHeight * 0.05;
     const endPos = windowHeight * 0.9;
     const currentY = startPos + scrollPercent * (endPos - startPos);
-    const rotation = scrollPercent * 1080;
     sidebarClutcher.style.top = `${currentY}px`;
-    sidebarClutcher.style.transform = `rotate(${rotation}deg)`;
+    sidebarClutcher.style.transform = `rotate(${scrollPercent * 1080}deg)`;
   }
 
-  // --- MULTI-STAGE ANIMATION ---
+  // --- GLOBAL PROGRESS CALCS ---
   const isMobile = window.innerWidth < 600;
+  const animStart = windowHeight * 0.3;
+  const phase1Range = windowHeight * 1.5;
+  const p1Progress = Math.min(
+    Math.max((scrollPos - animStart) / phase1Range, 0),
+    1
+  );
 
-  // Phase 1: Hand to Video Transition
-  const phase1End = windowHeight * (isMobile ? 1.5 : 1.8);
-  const p1Progress = Math.min(scrollPos / phase1End, 1);
+  // Stage 2 Progress (Video to Note)
+  const p2Start = animStart + phase1Range;
+  const p2Duration = windowHeight * 1.2;
+  const p2Progress = Math.min(
+    Math.max((scrollPos - p2Start) / p2Duration, 0),
+    1
+  );
 
+  // --- STAGE 1: HERO TO SCENE ---
   if (p1Progress < 1) {
-    // 1. Hand Scaling & Movement
     if (hand) {
       const scaleFactor = isMobile ? 1.2 : 2.0;
       const handScale = 1 + Math.pow(p1Progress, 1.5) * scaleFactor;
       const handY = p1Progress * (isMobile ? 150 : 300);
       const handX = p1Progress * (isMobile ? 50 : 100);
 
-      hand.style.opacity = 1 - Math.pow(p1Progress, 2);
+      hand.style.opacity = Math.max(0, 1 - Math.pow(p1Progress, 2));
       hand.style.filter = `blur(${p1Progress * (isMobile ? 8 : 12)}px)`;
-      // Apply transform separately to ensure rotation or other base styles don't conflict
       hand.style.transform = `scale(${handScale}) translate(${handX}px, ${handY}px)`;
     }
 
-    // 2. Clutcher PNG moving to center
     if (clutcherPng) {
       const initR = window.innerWidth * (isMobile ? 0.32 : 0.14);
       const initB = window.innerWidth * (isMobile ? 0.32 : 0.094);
       const clutcherWidth = clutcherPng.offsetWidth || 40;
-
-      // Target is horizontal center of screen
       const finalR = window.innerWidth / 2 - clutcherWidth / 2;
       const finalB = window.innerHeight * (isMobile ? 0.45 : 0.4);
 
-      const moveX = p1Progress * (finalR - initR);
-      const moveY = p1Progress * (finalB - initB);
-
-      clutcherPng.style.right = `${initR + moveX}px`;
-      clutcherPng.style.bottom = `${initB + moveY}px`;
+      clutcherPng.style.right = `${initR + p1Progress * (finalR - initR)}px`;
+      clutcherPng.style.bottom = `${initB + p1Progress * (finalB - initB)}px`;
       clutcherPng.style.transform = `rotate(${p1Progress * 360}deg)`;
-
-      // Smoother fade out
-      const clutcherOpacity =
+      clutcherPng.style.opacity =
         p1Progress < 0.4 ? 1 : Math.max(0, 1 - (p1Progress - 0.4) / 0.4);
-      clutcherPng.style.opacity = clutcherOpacity;
-
       if (p1Progress >= 0.8) clutcherPng.style.opacity = 0;
     }
 
     if (videoWrapper) {
-      // Reach full opacity by 80% of Phase 1
-      const videoFadeStart = 0.5;
-      const videoFadeEnd = 0.8;
-      let videoOpacity = 0;
-
-      if (p1Progress > videoFadeStart) {
-        videoOpacity = Math.min(
-          1,
-          (p1Progress - videoFadeStart) / (videoFadeEnd - videoFadeStart)
-        );
-      }
+      const videoFadeStart = 0.6;
+      const videoFadeEnd = 0.9;
+      const videoOpacity =
+        p1Progress > videoFadeStart
+          ? Math.min(
+              1,
+              (p1Progress - videoFadeStart) / (videoFadeEnd - videoFadeStart)
+            )
+          : 0;
       videoWrapper.style.opacity = videoOpacity;
+      // Ensure video position is reset if scrolling back up
+      videoWrapper.style.transform = `translateY(-50%) scale(1)`;
     }
   } else {
-    // Phase 2: Video Focus & Note Transition
-    const p2Offset = scrollPos - phase1End;
-    const p2Duration = windowHeight * (isMobile ? 1.2 : 1.5);
-    const p2Progress = Math.min(p2Offset / p2Duration, 1);
-
+    // Stage 2 Logic
     if (hand) hand.style.opacity = 0;
     if (clutcherPng) clutcherPng.style.opacity = 0;
 
@@ -111,85 +107,71 @@ function updateScrollAnimations() {
       const liftAmount = isMobile ? 80 : 150;
       videoWrapper.style.transform = `translateY(calc(-50% - ${
         p2Progress * liftAmount
-      }px)) scale(${1 + p2Progress * 0.3})`;
+      }px)) scale(${1 + p2Progress * 0.2})`;
     }
 
     if (clutcherVidContainer) {
-      // Delay blur and fade until 40% into phase 2 to keep video clear longer
-      const blurStartThreshold = 0.4;
-      let effectiveBlurProgress = 0;
-
-      if (p2Progress > blurStartThreshold) {
-        effectiveBlurProgress =
-          (p2Progress - blurStartThreshold) / (1 - blurStartThreshold);
-      }
-
-      const blurAmount = effectiveBlurProgress * (isMobile ? 15 : 20);
-      clutcherVidContainer.style.filter = `blur(${blurAmount}px)`;
-
-      // Video should stay relatively visible until much later
-      const fadeThreshold = 0.5;
-      let effectiveFadeProgress = 0;
-      if (p2Progress > fadeThreshold) {
-        effectiveFadeProgress =
-          (p2Progress - fadeThreshold) / (1 - fadeThreshold);
-      }
-      clutcherVidContainer.style.opacity = 1 - effectiveFadeProgress;
+      const blurThreshold = 0.2;
+      const blurVal =
+        p2Progress > blurThreshold
+          ? (p2Progress - blurThreshold) / (1 - blurThreshold)
+          : 0;
+      clutcherVidContainer.style.filter = `blur(${blurVal * 20}px)`;
+      clutcherVidContainer.style.opacity = 1 - blurVal;
     }
 
-    // Auto-play safety
-    if (
-      clutcherVideo &&
-      clutcherVideo.paused &&
-      p1Progress >= 1 &&
-      p2Progress < 1
-    ) {
+    if (clutcherVideo && clutcherVideo.paused && p2Progress < 1) {
       clutcherVideo.play().catch(() => {});
     }
   }
 
-  // 3. Pixel Reveal & Reveal the note
+  // --- STAGE 3: PIXEL REVEAL ---
   if (pixelWrapper) {
     const rect = pixelWrapper.getBoundingClientRect();
-    const triggerPoint = windowHeight * 0.8;
-    const endPoint = windowHeight * 0.3;
+    const trigger = windowHeight * 0.9; // Start reveal a bit earlier
+    const finish = windowHeight * 0.3; // Fully clear by here
 
-    // Calculate progress through the trigger zone
     const revealProgress = Math.min(
-      Math.max((triggerPoint - rect.top) / (triggerPoint - endPoint), 0),
+      Math.max((trigger - rect.top) / (trigger - finish), 0),
       1
     );
 
     if (pixelOverlay) {
       pixelOverlay.style.opacity = 1 - revealProgress;
-    }
-    if (unlockHint) {
-      unlockHint.style.opacity = 0.6 * (1 - revealProgress);
+      // Gradually reduce blur to 0
+      const currentBlur = 20 * (1 - revealProgress);
+      pixelOverlay.style.backdropFilter = `blur(${currentBlur}px) contrast(0.7)`;
     }
 
-    if (revealProgress > 0.1 && reveal) {
+    if (unlockHint) {
+      unlockHint.style.opacity = 0.6 * (1 - revealProgress);
+      // Fixed: p2Progress is now defined globally in this function
+      unlockHint.style.transform = `translateY(${-p2Progress * 30}px)`;
+    }
+
+    // Safety: ensure message is visible if unlocked
+    if (revealProgress > 0.01 && reveal) {
       reveal.classList.add("visible");
     }
   }
 }
 
-// Listeners
+// Event Listeners
 window.addEventListener("scroll", updateScrollAnimations);
 window.addEventListener("resize", updateScrollAnimations);
+document.addEventListener("DOMContentLoaded", updateScrollAnimations);
 
-// Theme Toggle Logic
-const themeToggle = document.getElementById("theme-toggle");
-const themeIcon = document.getElementById("theme-icon");
+// Theme Toggle
 if (themeToggle) {
   themeToggle.addEventListener("click", () => {
     document.body.classList.toggle("dark-mode");
-    if (document.body.classList.contains("dark-mode")) {
-      themeIcon.src = "assets/day.png";
-    } else {
-      themeIcon.src = "assets/night.png";
+    if (themeIcon) {
+      themeIcon.src = document.body.classList.contains("dark-mode")
+        ? "assets/day.png"
+        : "assets/night.png";
     }
   });
 }
 
-// Initial trigger
+// Initial Kickoff
 updateScrollAnimations();
