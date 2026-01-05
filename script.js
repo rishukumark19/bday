@@ -298,14 +298,31 @@ window.addEventListener("scroll", updateScrollAnimations);
 window.addEventListener("resize", updateScrollAnimations);
 document.addEventListener("DOMContentLoaded", updateScrollAnimations);
 
-// Theme Toggle
+const bdayMusic = document.getElementById("bday-music");
+let musicStarted = false;
+
+// Theme Toggle & Music Logic
 if (themeToggle) {
   themeToggle.addEventListener("click", () => {
+    // 1. Theme Toggle
     document.body.classList.toggle("dark-mode");
     if (themeIcon) {
       themeIcon.src = document.body.classList.contains("dark-mode")
         ? "assets/day.png"
         : "assets/night.png";
+    }
+
+    // 2. Music Logic
+    if (bdayMusic) {
+      if (!musicStarted) {
+        bdayMusic.play().catch(() => {
+          console.log("Autoplay blocked, waiting for manual interaction.");
+        });
+        musicStarted = true;
+      } else {
+        // Toggle Mute/Unmute
+        bdayMusic.muted = !bdayMusic.muted;
+      }
     }
   });
 }
