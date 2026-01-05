@@ -1,3 +1,7 @@
+html {
+  scroll-behavior: smooth;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -7,14 +11,16 @@
 
 body {
   background: #dfe4e5;
-  color: #222;
+  color: #1a1a1a;
   overflow-x: hidden;
-  transition: background-color 0.5s ease, color 0.5s ease;
+  transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: "Inter", sans-serif;
 }
 
 body.dark-mode {
-  background: #dfe4e5;
-  color: #222;
+  background: #dfe4e5; /* Keeping same as requested to avoid video mismatch */
+  color: #1a1a1a;
 }
 
 /* SIDEBAR SCROLL TRACKER */
@@ -60,8 +66,35 @@ body.dark-mode {
 }
 
 .hero h1 {
-  font-size: 3rem;
+  font-family: "Outfit", sans-serif;
+  font-size: 4rem;
+  font-weight: 600;
   margin-bottom: 0.5rem;
+  letter-spacing: -1px;
+}
+
+.scroll-cue {
+  font-size: 2rem;
+  margin-top: 2rem;
+  animation: bounce 2s infinite;
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
 }
 
 /* THEME TOGGLE */
@@ -163,15 +196,30 @@ body.dark-mode {
   z-index: 500;
   min-height: 100vh;
   padding: 10vh 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .note pre {
-  max-width: 700px;
-  margin: auto;
-  font-size: 1.15rem;
+  max-width: 800px;
+  padding: 3rem;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  font-size: 1.25rem;
   line-height: 1.8;
   white-space: pre-wrap;
   word-wrap: break-word;
+  color: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode .note pre {
+  background: rgba(30, 30, 35, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .reveal {
