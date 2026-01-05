@@ -164,6 +164,30 @@ Ps: read it twice
       <button id="gallery-toggle" class="gallery-toggle-btn hidden">
         Hide Gallery 🔒
       </button>
+
+      <!-- GIFT REVEAL (Shows after unlock) -->
+      <button id="gift-toggle" class="gallery-toggle-btn hidden">
+        Open Gift 🎁
+      </button>
+      <div id="gift-section" class="gift-reveal hidden">
+        <h3 class="gift-title">A special gift for you... 🎁</h3>
+        <div class="gift-frame">
+          <img src="assets/private/gift/gift.jpeg" alt="Special Gift" />
+        </div>
+      </div>
+      <!-- MATH MCQ OVERLAY (For Gift) -->
+      <div id="math-quiz-container" class="quiz-overlay math-mode">
+        <div class="quiz-card">
+          <h3>Quick Brain Test! 🧠</h3>
+          <p
+            id="math-question-text"
+            style="font-size: 1.5rem; margin: 1.5rem 0; color: #4a3728"
+          ></p>
+          <div id="math-options" class="quiz-options">
+            <!-- MCQ buttons -->
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- SILENCE -->
@@ -171,7 +195,10 @@ Ps: read it twice
 
     <!-- FOOTER -->
     <footer class="footer-reveal">
-      <img src="assets/footer.png" alt="Happy Birthday Footer" />
+      <div class="footer-content">
+        <img src="assets/footer.png" alt="Happy Birthday Footer" />
+        <p class="signature">Crafted with curiosity</p>
+      </div>
     </footer>
 
     <script src="script.js"></script>

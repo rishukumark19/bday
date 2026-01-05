@@ -409,9 +409,16 @@ if (dialButtons.length > 0) {
           clearInterval(slideInterval);
 
           const galleryToggleBtn = document.getElementById("gallery-toggle");
+          const giftToggleBtn = document.getElementById("gift-toggle");
+          const giftSection = document.getElementById("gift-section");
+
           if (galleryToggleBtn) {
             galleryToggleBtn.classList.remove("hidden");
             galleryToggleBtn.textContent = "Show Gallery 🔓";
+          }
+          if (giftToggleBtn) {
+            giftToggleBtn.classList.remove("hidden");
+            giftToggleBtn.textContent = "Open Gift 🎁";
           }
 
           if (lockedSlideshow) {
@@ -441,6 +448,91 @@ if (dialButtons.length > 0) {
                 }
               }
             });
+          }
+
+          // Gift Toggle Logic
+          const mathQuizContainer = document.getElementById(
+            "math-quiz-container"
+          );
+          const mathQuestionText =
+            document.getElementById("math-question-text");
+          const mathOptionsContainer = document.getElementById("math-options");
+
+          if (giftToggleBtn) {
+            giftToggleBtn.addEventListener("click", () => {
+              if (giftSection) {
+                const isHidden = giftSection.classList.contains("hidden");
+                if (isHidden) {
+                  // Show Math MCQ instead of prompt
+                  generateMathMCQ();
+                  if (mathQuizContainer)
+                    mathQuizContainer.style.display = "block";
+                } else {
+                  giftSection.classList.add("hidden");
+                  giftToggleBtn.textContent = "Open Gift 🎁";
+                }
+              }
+            });
+          }
+
+          function generateMathMCQ() {
+            const ops = ["+", "-", "*"]; // Using multiplication instead of division for MCQ fun
+            const op = ops[Math.floor(Math.random() * ops.length)];
+            let a, b, expected;
+
+            if (op === "+") {
+              a = Math.floor(Math.random() * 40) + 10;
+              b = Math.floor(Math.random() * 40) + 10;
+              expected = a + b;
+            } else if (op === "-") {
+              a = Math.floor(Math.random() * 50) + 50;
+              b = Math.floor(Math.random() * 40) + 10;
+              expected = a - b;
+            } else {
+              a = Math.floor(Math.random() * 10) + 2;
+              b = Math.floor(Math.random() * 12) + 2;
+              expected = a * b;
+            }
+
+            if (mathQuestionText) {
+              mathQuestionText.textContent = `What is ${a} ${
+                op === "*" ? "×" : op
+              } ${b}?`;
+            }
+
+            // Generate Options
+            const options = new Set();
+            options.add(expected);
+            while (options.size < 4) {
+              const wrong = expected + (Math.floor(Math.random() * 20) - 10);
+              if (wrong !== expected && wrong > 0) options.add(wrong);
+            }
+
+            const shuffledOptions = Array.from(options).sort(
+              () => Math.random() - 0.5
+            );
+
+            if (mathOptionsContainer) {
+              mathOptionsContainer.innerHTML = "";
+              shuffledOptions.forEach((opt) => {
+                const btn = document.createElement("button");
+                btn.className = "quiz-btn";
+                btn.textContent = opt;
+                btn.addEventListener("click", () => {
+                  if (opt === expected) {
+                    if (mathQuizContainer)
+                      mathQuizContainer.style.display = "none";
+                    if (giftSection) giftSection.classList.remove("hidden");
+                    if (giftToggleBtn)
+                      giftToggleBtn.textContent = "Close Gift 🔒";
+                  } else {
+                    alert("Not quite right! Try again. 🧠");
+                    generateMathMCQ(); // Shuffle again on fail
+                  }
+                });
+                mathOptionsContainer.appendChild(btn);
+              });
+            }
           }
         } else {
           if (phoneScreen) phoneScreen.textContent = "try again";
