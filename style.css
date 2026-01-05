@@ -315,3 +315,7 @@ body.dark-mode .note pre {
     text-align: left;
   }
 }
+
+.ending-space {
+  height: 60vh;
+}
