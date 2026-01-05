@@ -87,7 +87,7 @@ body.dark-mode {
 
 /* SCENE */
 .scene {
-  height: 300vh; /* Increased height for the multi-stage animation */
+  height: 300vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -109,12 +109,11 @@ body.dark-mode {
 
 .clutcher-png-rotating {
   position: fixed;
-  width: 45px; /* Smaller */
+  width: 45px;
   z-index: 110;
   pointer-events: none;
-  /* Adjusting: matching uncropped hand */
-  bottom: 110px;
-  right: 160px;
+  bottom: 140px;
+  right: 200px;
   animation: infiniteRotate 10s linear infinite;
 }
 
@@ -129,15 +128,15 @@ body.dark-mode {
 
 .image-wrapper {
   position: sticky;
-  top: 30%; /* Even higher */
-  transform: translateY(-50%);
+  top: 30%;
+  transform: translateX(50px) translateY(-50%); /* Shifted right to match animation */
   width: 100%;
   max-width: 600px;
   margin: auto;
   z-index: 50;
   display: flex;
   justify-content: center;
-  opacity: 0; /* Hidden initially */
+  opacity: 0;
 }
 
 .clutcher-container {
@@ -190,14 +189,14 @@ body.dark-mode {
 
   .hand-on-top {
     width: 70vw;
-    bottom: -30px;
-    right: -30px;
+    bottom: 0px;
+    right: 0px;
   }
 
   .clutcher-png-rotating {
     width: 60px;
-    bottom: 180px;
-    right: 120px;
+    bottom: 140px;
+    right: 140px;
   }
 
   .note pre {
