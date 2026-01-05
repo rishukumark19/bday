@@ -430,29 +430,249 @@ body.dark-mode {
 
 .note pre {
   width: 100%;
-  padding: 3rem;
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(10px);
+  max-width: 700px;
+  padding: 4rem 3.5rem;
+  background: #f4e4bc;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  border-left: 20px solid #e2c992;
+  border-right: 20px solid #e2c992;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.1),
+    inset 0 0 100px rgba(139, 69, 19, 0.1);
+  font-family: "Outfit", sans-serif;
   font-size: 1.25rem;
   line-height: 1.8;
   white-space: pre-wrap;
   word-wrap: break-word;
+  color: #4a3728;
   position: relative;
   z-index: 5;
+  margin: 2rem 0;
+  border-radius: 4px;
+}
+
+/* Scroll Rollers */
+.note pre::before,
+.note pre::after {
+  content: "";
+  position: absolute;
+  left: -25px;
+  right: -25px;
+  height: 40px;
+  background: linear-gradient(to bottom, #8b4513, #a0522d, #8b4513);
+  border-radius: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  z-index: 6;
+}
+
+.note pre::before {
+  top: -20px;
+}
+
+.note pre::after {
+  bottom: -20px;
 }
 
 .reveal {
+  display: none;
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 1.5s ease, transform 1.5s ease;
-  display: none; /* Occupy no space */
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: opacity 1.5s ease,
+    transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: none;
 }
 
 .reveal.visible {
   display: block;
   opacity: 1;
-  transform: translateY(0);
+  transform: scaleY(1);
+}
+
+.scroll-toggle-btn {
+  display: none;
+}
+
+/* CLOSED SCROLL STYLES */
+.closed-scroll-container {
+  display: none; /* Show after quiz */
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  animation: floatScroll 3s ease-in-out infinite;
+  margin-bottom: 2rem;
+  z-index: 200;
+}
+
+@keyframes floatScroll {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.scroll-roll {
+  width: 180px;
+  height: 60px;
+  background: #f4e4bc;
+  background-image: linear-gradient(
+      to right,
+      #e2c992 5px,
+      transparent 5px,
+      transparent 175px,
+      #e2c992 175px
+    ),
+    linear-gradient(
+      to bottom,
+      #8b4513 5px,
+      transparent 5px,
+      transparent 55px,
+      #8b4513 55px
+    );
+  border-radius: 30px;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wax-seal {
+  width: 35px;
+  height: 35px;
+  background: #d9534f;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 1.2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 2;
+}
+
+.wax-seal::after {
+  content: "";
+  position: absolute;
+  width: 45px;
+  height: 45px;
+  border: 2px dashed rgba(217, 83, 79, 0.4);
+  border-radius: 50%;
+}
+
+.scroll-label {
+  margin-top: 1rem;
+  font-family: "Outfit", sans-serif;
+  font-weight: 600;
+  color: #4a3728;
+  opacity: 0.8;
+}
+
+/* OPEN SCROLL STYLES */
+.note pre {
+  width: 100%;
+  max-width: 700px;
+  padding: 4rem 3.5rem;
+  background: #f4e4bc;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  border-left: 20px solid #e2c992;
+  border-right: 20px solid #e2c992;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.1),
+    inset 0 0 100px rgba(139, 69, 19, 0.1);
+  font-family: "Outfit", sans-serif;
+  font-size: 1.25rem;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: #4a3728;
+  position: relative;
+  z-index: 5;
+  margin: 2rem 0;
+  border-radius: 4px;
+}
+
+/* Scroll Rollers */
+.note pre::before,
+.note pre::after {
+  content: "";
+  position: absolute;
+  left: -25px;
+  right: -25px;
+  height: 40px;
+  background: linear-gradient(to bottom, #8b4513, #a0522d, #8b4513);
+  border-radius: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  z-index: 6;
+}
+
+.note pre::before {
+  top: -20px;
+}
+
+.note pre::after {
+  bottom: -20px;
+}
+
+.reveal {
+  display: none;
+  opacity: 0;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: opacity 1.5s ease,
+    transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.reveal.visible {
+  display: block;
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+.roll-back-btn {
+  display: none;
+  margin: 1rem auto;
+  background: transparent;
+  border: 1px solid #e2c992;
+  color: #4a3728;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: "Outfit", sans-serif;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.roll-back-btn:hover {
+  background: #e2c992;
+  color: white;
+}
+
+.close-scroll-btn {
+  display: block;
+  margin: 2rem auto 0;
+  padding: 0.8rem 1.5rem;
+  background: #d9534f;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: "Outfit", sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(217, 83, 79, 0.3);
+  transition: all 0.3s ease;
+}
+
+.close-scroll-btn:hover {
+  background: #c9302c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(217, 83, 79, 0.4);
 }
 
 /* PRIVATE SECTION */
@@ -611,6 +831,31 @@ body.dark-mode {
   opacity: 1;
 }
 
+.gallery-toggle-btn {
+  margin: 2rem auto;
+  padding: 0.8rem 1.8rem;
+  background: rgba(240, 237, 232, 0.9);
+  color: #444;
+  border: 1px solid #ddd;
+  border-radius: 50px;
+  font-family: "Outfit", sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  display: block;
+}
+
+.gallery-toggle-btn:hover {
+  background: #eee;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.gallery-toggle-btn.hidden {
+  display: none !important;
+}
+
 .ending-space {
   height: 20vh;
 }
@@ -654,5 +899,27 @@ body.dark-mode {
   .note pre {
     font-size: 1rem;
     padding: 1.5rem;
+  }
+}
+
+/* CLICK POPPER FRAGMENTS */
+.popper-fragment {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+  z-index: 10000;
+  border-radius: 50%;
+  animation: explode 0.8s ease-out forwards;
+}
+
+@keyframes explode {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(0);
+    opacity: 0;
   }
 }

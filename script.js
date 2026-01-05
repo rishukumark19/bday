@@ -44,6 +44,7 @@ const quizContainer = document.getElementById("quiz-container");
 const quizOptions = document.getElementById("quiz-options");
 const quizTitle = document.getElementById("quiz-question-title");
 const quizDots = document.getElementById("quiz-step-dots");
+const scrollToggleBtn = document.getElementById("scroll-toggle");
 
 function showQuizStep(step) {
   if (step >= quizData.length) {
@@ -92,6 +93,9 @@ function showQuizStep(step) {
   });
 }
 
+const closedScroll = document.getElementById("closed-scroll");
+const closeScrollBtn = document.getElementById("close-scroll-btn");
+
 function revealNoteFinal() {
   const noteSection = pixelRevealBtn.closest(".note");
   if (quizContainer) quizContainer.style.display = "none";
@@ -104,12 +108,49 @@ function revealNoteFinal() {
       pixelOverlay.style.pointerEvents = "none";
     }, 50);
   }
-  if (reveal) {
-    reveal.style.display = "block";
-    setTimeout(() => {
-      reveal.classList.add("visible");
-    }, 50);
+
+  // Show the visual closed scroll icon
+  if (closedScroll) {
+    closedScroll.style.display = "flex";
+    closedScroll.style.opacity = "1";
   }
+}
+
+// Closed Scroll Click Logic (The actual reveal)
+if (closedScroll) {
+  closedScroll.addEventListener("click", () => {
+    if (reveal) {
+      reveal.style.display = "block";
+      setTimeout(() => {
+        reveal.classList.add("visible");
+        // Hide the closed icon once unrolled
+        closedScroll.style.opacity = "0";
+        setTimeout(() => {
+          closedScroll.style.display = "none";
+        }, 500);
+      }, 50);
+    }
+  });
+}
+
+// Close Letter Logic
+if (closeScrollBtn) {
+  closeScrollBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (reveal) {
+      reveal.classList.remove("visible");
+      setTimeout(() => {
+        reveal.style.display = "none";
+        // Bring back the closed scroll icon
+        if (closedScroll) {
+          closedScroll.style.display = "flex";
+          closedScroll.style.opacity = "1";
+        }
+        const noteSection = pixelRevealBtn.closest(".note");
+        if (noteSection) noteSection.classList.remove("expanded");
+      }, 1500); // Match CSS transition
+    }
+  });
 }
 
 // Memory Chest Reveal Logic
@@ -367,9 +408,12 @@ if (dialButtons.length > 0) {
 
           clearInterval(slideInterval);
 
-          if (privateGallery) {
-            privateGallery.classList.remove("hidden");
+          const galleryToggleBtn = document.getElementById("gallery-toggle");
+          if (galleryToggleBtn) {
+            galleryToggleBtn.classList.remove("hidden");
+            galleryToggleBtn.textContent = "Show Gallery 🔓";
           }
+
           if (lockedSlideshow) {
             lockedSlideshow.style.opacity = "0";
             setTimeout(() => {
@@ -382,6 +426,22 @@ if (dialButtons.length > 0) {
               keypadWrap.style.display = "none";
             }, 1000);
           }
+
+          // Gallery Toggle Logic
+          if (galleryToggleBtn) {
+            galleryToggleBtn.addEventListener("click", () => {
+              if (privateGallery) {
+                const isHidden = privateGallery.classList.contains("hidden");
+                if (isHidden) {
+                  privateGallery.classList.remove("hidden");
+                  galleryToggleBtn.textContent = "Hide Gallery 🔒";
+                } else {
+                  privateGallery.classList.add("hidden");
+                  galleryToggleBtn.textContent = "Show Gallery 🔓";
+                }
+              }
+            });
+          }
         } else {
           if (phoneScreen) phoneScreen.textContent = "try again";
           dialInput = "";
@@ -392,4 +452,55 @@ if (dialButtons.length > 0) {
       }
     });
   });
+}
+// --- GLOBAL CLICK EFFECTS (Sound & Popper) ---
+const clickSound = document.getElementById("click-sound");
+
+document.addEventListener("click", (e) => {
+  // 1. Play Click Sound
+  if (clickSound) {
+    clickSound.currentTime = 0;
+    clickSound.play().catch(() => {});
+  }
+
+  // 2. Create Popper Burst
+  createPopper(e.clientX, e.clientY);
+});
+
+function createPopper(x, y) {
+  const colors = [
+    "#ff595e",
+    "#ffca3a",
+    "#8ac926",
+    "#1982c4",
+    "#6a4c93",
+    "#ff924c",
+  ];
+  const fragmentCount = 12;
+
+  for (let i = 0; i < fragmentCount; i++) {
+    const fragment = document.createElement("div");
+    fragment.className = "popper-fragment";
+
+    // Random appearance
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    fragment.style.backgroundColor = color;
+
+    // Position at click
+    fragment.style.left = `${x}px`;
+    fragment.style.top = `${y}px`;
+
+    // Random trajectory
+    const tx = (Math.random() - 0.5) * 200;
+    const ty = (Math.random() - 0.5) * 200;
+    fragment.style.setProperty("--tx", `${tx}px`);
+    fragment.style.setProperty("--ty", `${ty}px`);
+
+    document.body.appendChild(fragment);
+
+    // Clean up
+    setTimeout(() => {
+      fragment.remove();
+    }, 800);
+  }
 }

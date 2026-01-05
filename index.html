@@ -45,6 +45,12 @@
           type="audio/mpeg"
         />
       </audio>
+      <audio id="click-sound">
+        <source
+          src="https://www.soundjay.com/buttons/sounds/button-16.mp3"
+          type="audio/mpeg"
+        />
+      </audio>
     </section>
 
     <!-- IMAGE SCENE -->
@@ -96,6 +102,15 @@
         </div>
 
         <div class="pixel-overlay"></div>
+
+        <!-- CLOSED SCROLL (Visible after quiz) -->
+        <div id="closed-scroll" class="closed-scroll-container">
+          <div class="scroll-roll">
+            <div class="wax-seal">❤️</div>
+          </div>
+          <p class="scroll-label">Click to open your letter</p>
+        </div>
+
         <pre class="reveal-text reveal">
 hey ! many many happy returns of the day , hope u are well. and haha , i can imagine u must have planned smth this year as well ahaha. smth new maybe . i kinda missed u a lot to be honest , not like i am crazy bout u yk . ahah well i remember since it was new year , i was moving all the files from phone to laptop , clearing out space , and i could literally remember me telling u how dumb u are, cant even move ur files lol , so i was remembering other things as well ahaha. well yk i recently made a post on insta as well , so i planned on adding smth close to ur reference , idk y i wanted to do that , but yaa , i added a pic , u remember we were in udupi beach and u were clicking my pics , and few pics were of those shades which were there on the beach , so yaa i added that as well , cause yk , it was a sun kissed pic . ahaha. and again recently , yk i have been going to reliance fresh lately , and literally . so i have this habit of converting prices to unit , and ughhh it just sparks my head instantly . like it literally reminds me of u da . If I am sending this as text ! Tell me 680/5 (fyi that’s the price of 5kg surf excel I was checking out today lol, fyi 1 kg packet comes cheaper than 5kg packet Ahmm)
 
@@ -103,6 +118,7 @@ Well few days ago I was talking to myself what I will say to u , and the only th
 
 Yours dumbass!
 Ps: read it twice
+          <button id="close-scroll-btn" class="close-scroll-btn">Close Letter 🔒</button>
         </pre>
       </div>
     </section>
@@ -137,7 +153,6 @@ Ps: read it twice
         </div>
       </div>
 
-      <!-- FULL GALLERY (Shows after unlock) -->
       <div id="private-gallery" class="gallery hidden">
         <!-- Private Memories Unlocked -->
         <img src="assets/private/hand.jpeg" alt="Memory" />
@@ -146,6 +161,9 @@ Ps: read it twice
         <img src="assets/private/udupi beach.jpeg" alt="Memory" />
         <img src="assets/private/upupi beach 2.png" alt="Memory" />
       </div>
+      <button id="gallery-toggle" class="gallery-toggle-btn hidden">
+        Hide Gallery 🔒
+      </button>
     </section>
 
     <!-- SILENCE -->
