@@ -44,12 +44,12 @@ window.addEventListener("scroll", () => {
     hand.style.opacity = handFade;
 
     // 2. Clutcher PNG moving to center
-    const initR = isMobile ? 120 : 200;
-    const initB = isMobile ? 120 : 140;
+    const initR = window.innerWidth * (isMobile ? 0.32 : 0.14);
+    const initB = window.innerWidth * (isMobile ? 0.32 : 0.094);
 
     // Calculate center-ish targets
-    // For 'right' property, center is (width/2 - elementWidth/2)
-    const finalR = window.innerWidth / 2 - 25; // 25 is roughly half of clutcher width
+    const clutcherWidth = clutcherPng.offsetWidth;
+    const finalR = window.innerWidth / 2 - clutcherWidth / 2;
     const finalB = window.innerHeight * (isMobile ? 0.4 : 0.3);
 
     const moveX = p1Progress * (finalR - initR);

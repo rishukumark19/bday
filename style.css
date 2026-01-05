@@ -109,11 +109,12 @@ body.dark-mode {
 
 .clutcher-png-rotating {
   position: fixed;
-  width: 45px;
+  width: 3.5vw;
+  min-width: 35px;
   z-index: 110;
   pointer-events: none;
-  bottom: 140px;
-  right: 200px;
+  bottom: 9.4vw; /* Changed from 15vh to be locked to width */
+  right: 14vw;
   animation: infiniteRotate 10s linear infinite;
 }
 
@@ -202,9 +203,10 @@ body.dark-mode {
   }
 
   .clutcher-png-rotating {
-    width: 45px;
-    bottom: 120px;
-    right: 120px;
+    width: 10vw;
+    min-width: 40px;
+    bottom: 32vw; /* Proportional to mobile width */
+    right: 32vw;
   }
 
   .image-wrapper {
