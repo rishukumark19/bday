@@ -24,20 +24,20 @@ window.addEventListener("scroll", () => {
 
   // --- MULTI-STAGE ANIMATION ---
 
-  // Phase 1: Hand to Video (0% to 40% of page scroll)
-  const phase1End = windowHeight * 1.2;
+  // Phase 1: Hand to Video (Slower transition)
+  const phase1End = windowHeight * 1.8;
   const p1Progress = Math.min(scrollPos / phase1End, 1);
 
   if (p1Progress < 1) {
-    // 1. Hand getting bigger
-    const handScale = 1 + p1Progress * 0.5;
+    // 1. Hand getting bigger (Starts slower, reaches destination with the clutcher)
+    const handScale = 1 + Math.pow(p1Progress, 1.2) * 1.5;
     hand.style.transform = `scale(${handScale})`;
     hand.style.opacity = 1;
 
     // 2. Clutcher PNG moving to center
-    // Initial: bottom: 60, right: 110
-    const initR = 110;
-    const initB = 60;
+    // Initial position relative to uncropped hand
+    const initR = 160;
+    const initB = 110;
     const moveX = p1Progress * (window.innerWidth / 2 - initR);
     const moveY = p1Progress * (window.innerHeight * 0.3 - initB);
 
@@ -45,15 +45,16 @@ window.addEventListener("scroll", () => {
     clutcherPng.style.bottom = `${initB + moveY}px`;
     clutcherPng.style.opacity = 1 - Math.pow(p1Progress, 4); // Fade out near the end
 
-    // Video stays hidden
-    videoWrapper.style.opacity = p1Progress > 0.8 ? (p1Progress - 0.8) * 5 : 0;
+    // Video stays hidden until very close to the handover
+    videoWrapper.style.opacity = p1Progress > 0.9 ? (p1Progress - 0.9) * 10 : 0;
   } else {
     // Phase 2: Video Blur & Disappear (40% to 100%)
     const p2Offset = scrollPos - phase1End;
     const p2Progress = Math.min(p2Offset / (windowHeight * 1.5), 1);
 
-    // Hand continues to big and then fades
-    hand.style.transform = `scale(1.5)`;
+    // Hand continues to get even bigger as it fades
+    const handScale = 2.5 + p2Progress * 1.0;
+    hand.style.transform = `scale(${handScale})`;
     hand.style.opacity = 1 - p2Progress;
 
     // Clutcher PNG is gone

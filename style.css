@@ -96,11 +96,11 @@ body.dark-mode {
 
 .hand-on-top {
   position: fixed;
-  bottom: -50px;
-  right: -50px;
+  bottom: 0;
+  right: 0;
   width: 40vw;
-  max-width: 600px;
   height: auto;
+  object-fit: contain;
   pointer-events: none;
   z-index: 100;
   transform-origin: bottom right;
@@ -112,9 +112,9 @@ body.dark-mode {
   width: 45px; /* Smaller */
   z-index: 110;
   pointer-events: none;
-  /* Adjusting: even more down, smaller and little left */
-  bottom: 60px;
-  right: 110px;
+  /* Adjusting: matching uncropped hand */
+  bottom: 110px;
+  right: 160px;
   animation: infiniteRotate 10s linear infinite;
 }
 
