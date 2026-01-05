@@ -317,5 +317,25 @@ body.dark-mode .note pre {
 }
 
 .ending-space {
-  height: 60vh;
+  height: 20vh; /* Reduced further to bring footer up */
+}
+
+.footer-reveal {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 2vh;
+  margin-top: -250px; /* Overlap with the above text card/content */
+  pointer-events: none; /* Let clicks pass through to content below if needed */
+  position: relative;
+  z-index: 1000; /* Ensure it sits on top of the note */
+}
+
+.footer-reveal img {
+  width: 100%;
+  max-width: 900px;
+  height: auto;
+  opacity: 1; /* Keep it clear since it's the final visual */
+  /* Removed border-radius and box-shadow to support transparent PNG naturally */
 }
