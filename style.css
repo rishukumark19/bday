@@ -129,14 +129,17 @@ body.dark-mode {
 .image-wrapper {
   position: sticky;
   top: 30%;
-  transform: translateX(50px) translateY(-50%); /* Shifted right to match animation */
-  width: 100%;
+  transform: translateY(
+    -50%
+  ); /* Removed translateX(50px) to prevent overflow, will handle in JS if needed */
+  width: 90%;
   max-width: 600px;
   margin: auto;
   z-index: 50;
   display: flex;
   justify-content: center;
   opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .clutcher-container {
@@ -184,23 +187,38 @@ body.dark-mode {
 /* MOBILE POLISH */
 @media (max-width: 600px) {
   .hero h1 {
-    font-size: 2.2rem;
+    font-size: 2.5rem;
+    padding: 0 1rem;
+  }
+
+  .scroll-tracker {
+    left: 15px;
   }
 
   .hand-on-top {
-    width: 70vw;
+    width: 85vw; /* Slightly larger on mobile base to be more prominent */
     bottom: 0px;
     right: 0px;
   }
 
   .clutcher-png-rotating {
-    width: 60px;
-    bottom: 140px;
-    right: 140px;
+    width: 45px;
+    bottom: 120px;
+    right: 120px;
+  }
+
+  .image-wrapper {
+    width: 85%;
+    top: 40%;
+  }
+
+  .note {
+    padding: 5vh 1.5rem;
   }
 
   .note pre {
-    font-size: 0.95rem;
+    font-size: 1rem;
     line-height: 1.6;
+    text-align: left;
   }
 }

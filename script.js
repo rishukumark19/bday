@@ -23,61 +23,77 @@ window.addEventListener("scroll", () => {
   }
 
   // --- MULTI-STAGE ANIMATION ---
+  const isMobile = window.innerWidth < 600;
 
-  // Phase 1: Hand to Video (Slower transition)
-  const phase1End = windowHeight * 1.8;
+  // Phase 1: Hand to Video
+  const phase1End = windowHeight * (isMobile ? 1.5 : 1.8);
   const p1Progress = Math.min(scrollPos / phase1End, 1);
 
   if (p1Progress < 1) {
-    // 1. Hand getting bigger and moving down as it unblurs
-    const handScale = 1 + Math.pow(p1Progress, 1.2) * 1.5;
-    const handY = p1Progress * 100; // Move down up to 100px
+    // 1. Hand Scaling
+    const scaleFactor = isMobile ? 0.8 : 1.5;
+    const handScale = 1 + Math.pow(p1Progress, 1.2) * scaleFactor;
+    const handY = p1Progress * (isMobile ? 50 : 100);
     hand.style.transform = `scale(${handScale}) translateY(${handY}px)`;
 
-    // Blur and Unblur effect (Peaks in the middle of scaling)
-    const handBlur = Math.sin(p1Progress * Math.PI) * 6;
+    // Blur and Unblur effect
+    const handBlur = Math.sin(p1Progress * Math.PI) * (isMobile ? 4 : 6);
     const handFade = 1 - Math.sin(p1Progress * Math.PI) * 0.3;
 
     hand.style.filter = `blur(${handBlur}px)`;
     hand.style.opacity = handFade;
 
     // 2. Clutcher PNG moving to center
-    // Initial position relative to uncropped hand
-    const initR = 200;
-    const initB = 140;
-    // Target: Slightly right of center to match new video location (40% from right)
-    const moveX = p1Progress * (window.innerWidth * 0.4 - initR);
-    const moveY = p1Progress * (window.innerHeight * 0.3 - initB);
+    const initR = isMobile ? 120 : 200;
+    const initB = isMobile ? 120 : 140;
+
+    // Calculate center-ish targets
+    // For 'right' property, center is (width/2 - elementWidth/2)
+    const finalR = window.innerWidth / 2 - 25; // 25 is roughly half of clutcher width
+    const finalB = window.innerHeight * (isMobile ? 0.4 : 0.3);
+
+    const moveX = p1Progress * (finalR - initR);
+    const moveY = p1Progress * (finalB - initB);
 
     clutcherPng.style.right = `${initR + moveX}px`;
     clutcherPng.style.bottom = `${initB + moveY}px`;
-    clutcherPng.style.opacity = 1 - Math.pow(p1Progress, 4); // Fade out near the end
 
-    // Video starts appearing earlier (from 75% progress)
+    // Fade out earlier to avoid overlapping with video (dead by 0.7 progress)
+    clutcherPng.style.opacity =
+      p1Progress < 0.5 ? 1 : 1 - (p1Progress - 0.5) / 0.2;
+    if (p1Progress >= 0.7) clutcherPng.style.opacity = 0;
+
     videoWrapper.style.opacity =
       p1Progress > 0.75 ? (p1Progress - 0.75) * 4 : 0;
   } else {
-    // Phase 2: Video Blur & Disappear (40% to 100%)
+    // Phase 2: Video Blur & Disappear
     const p2Offset = scrollPos - phase1End;
-    const p2Progress = Math.min(p2Offset / (windowHeight * 1.5), 1);
+    const p2Duration = windowHeight * (isMobile ? 1.2 : 1.5);
+    const p2Progress = Math.min(p2Offset / p2Duration, 1);
 
-    // Hand continues to get massive as it fades
-    const handScale = 2.5 + p2Progress * 4.5;
-    hand.style.transform = `scale(${handScale}) translateY(100px)`;
+    // Hand continues to scale but less aggressively on mobile
+    const baseScale = isMobile ? 1.8 : 2.5;
+    const finalScaleAdd = isMobile ? 2.5 : 4.5;
+    const handScale = baseScale + p2Progress * finalScaleAdd;
+
+    hand.style.transform = `scale(${handScale}) translateY(${
+      isMobile ? 50 : 100
+    }px)`;
     hand.style.opacity = 1 - p2Progress;
-    hand.style.filter = `blur(${p2Progress * 15}px)`; // Becomes blurry as it disappears
+    hand.style.filter = `blur(${p2Progress * (isMobile ? 10 : 15)}px)`;
 
-    // Clutcher PNG is gone
     clutcherPng.style.opacity = 0;
 
-    // Video is fully visible and starts blurring
     videoWrapper.style.opacity = 1;
-    clutcherVidContainer.style.filter = `blur(${p2Progress * 20}px)`;
+    clutcherVidContainer.style.filter = `blur(${
+      p2Progress * (isMobile ? 15 : 20)
+    }px)`;
     clutcherVidContainer.style.opacity = 1 - p2Progress * 0.5;
 
-    // Lift the video as it blurs
-    videoWrapper.style.transform = `translateX(50px) translateY(calc(-50% - ${
-      p2Progress * 100
+    const translateExtraX = isMobile ? 0 : 50;
+    const liftAmount = isMobile ? 50 : 100;
+    videoWrapper.style.transform = `translateX(${translateExtraX}px) translateY(calc(-50% - ${
+      p2Progress * liftAmount
     }px)) scale(${1 + p2Progress * 0.2})`;
   }
 
