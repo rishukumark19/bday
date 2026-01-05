@@ -7,6 +7,15 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <!-- SIDEBAR SCROLL CLUTCHER -->
+    <div class="scroll-tracker">
+      <img
+        src="assets/clutcher.png"
+        id="sidebar-clutcher"
+        alt="Scroll Indicator"
+      />
+    </div>
+
     <!-- HERO -->
     <section class="hero">
       <h1>Happy Birthday ✨</h1>
@@ -18,11 +27,18 @@
 
     <!-- IMAGE SCENE -->
     <section class="scene">
+      <!-- Initial Hand Progress -->
+      <div id="initial-stage">
+        <img src="assets/hand.png" class="hand-on-top" />
+        <img src="assets/clutcher.png" class="clutcher-png-rotating" />
+      </div>
+
+      <!-- Video Transition Stage -->
       <div class="image-wrapper">
         <div class="clutcher-container">
           <video
             id="clutcher-video"
-            class="clutcher"
+            class="clutcher-vid"
             autoplay
             muted
             loop
@@ -30,7 +46,6 @@
           >
             <source src="assets/clutcher-video-1.mp4" type="video/mp4" />
           </video>
-          <img src="assets/hand.png" class="hand-on-top" />
         </div>
       </div>
     </section>
