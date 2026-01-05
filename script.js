@@ -94,7 +94,6 @@ function updateScrollAnimations() {
             )
           : 0;
       videoWrapper.style.opacity = videoOpacity;
-      // Ensure video position is reset if scrolling back up
       videoWrapper.style.transform = `translateY(-50%) scale(1)`;
     }
   } else {
@@ -128,8 +127,8 @@ function updateScrollAnimations() {
   // --- STAGE 3: PIXEL REVEAL ---
   if (pixelWrapper) {
     const rect = pixelWrapper.getBoundingClientRect();
-    const trigger = windowHeight * 0.9; // Start reveal a bit earlier
-    const finish = windowHeight * 0.3; // Fully clear by here
+    const trigger = windowHeight * 0.9;
+    const finish = windowHeight * 0.3;
 
     const revealProgress = Math.min(
       Math.max((trigger - rect.top) / (trigger - finish), 0),
@@ -138,18 +137,15 @@ function updateScrollAnimations() {
 
     if (pixelOverlay) {
       pixelOverlay.style.opacity = 1 - revealProgress;
-      // Gradually reduce blur to 0
       const currentBlur = 20 * (1 - revealProgress);
       pixelOverlay.style.backdropFilter = `blur(${currentBlur}px) contrast(0.7)`;
     }
 
     if (unlockHint) {
       unlockHint.style.opacity = 0.6 * (1 - revealProgress);
-      // Fixed: p2Progress is now defined globally in this function
       unlockHint.style.transform = `translateY(${-p2Progress * 30}px)`;
     }
 
-    // Safety: ensure message is visible if unlocked
     if (revealProgress > 0.01 && reveal) {
       reveal.classList.add("visible");
     }
@@ -175,3 +171,67 @@ if (themeToggle) {
 
 // Initial Kickoff
 updateScrollAnimations();
+
+// --- PRIVATE GALLERY LOCK ---
+const dialButtons = document.querySelectorAll(".dial.soft button");
+const phoneScreen = document.getElementById("screen-text");
+const privateGallery = document.getElementById("private-gallery");
+const keypadWrap = document.querySelector(".keypad-wrap");
+const lockedSlideshow = document.getElementById("locked-slideshow");
+
+let dialInput = "";
+const DIAL_PASSWORD = "772562";
+
+// 1. Slideshow Logic (Locked State)
+let currentSlide = 0;
+const slides = document.querySelectorAll(".memory-slideshow .slide");
+
+function rotateSlides() {
+  if (slides.length === 0) return;
+  slides[currentSlide].classList.remove("active");
+  currentSlide = (currentSlide + 1) % slides.length;
+  slides[currentSlide].classList.add("active");
+}
+
+let slideInterval = setInterval(rotateSlides, 3000);
+
+// 2. Dial Logic
+if (dialButtons.length > 0) {
+  dialButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      dialInput += btn.dataset.key;
+      if (phoneScreen)
+        phoneScreen.textContent = "••••••".slice(0, dialInput.length);
+
+      if (dialInput.length === DIAL_PASSWORD.length) {
+        if (dialInput === DIAL_PASSWORD) {
+          if (phoneScreen) phoneScreen.textContent = "open";
+
+          clearInterval(slideInterval);
+
+          if (privateGallery) {
+            privateGallery.classList.remove("hidden");
+          }
+          if (lockedSlideshow) {
+            lockedSlideshow.style.opacity = "0";
+            setTimeout(() => {
+              lockedSlideshow.style.display = "none";
+            }, 1000);
+          }
+          if (keypadWrap) {
+            keypadWrap.style.opacity = "0";
+            setTimeout(() => {
+              keypadWrap.style.display = "none";
+            }, 1000);
+          }
+        } else {
+          if (phoneScreen) phoneScreen.textContent = "try again";
+          dialInput = "";
+          setTimeout(() => {
+            if (phoneScreen) phoneScreen.textContent = "enter password";
+          }, 1000);
+        }
+      }
+    });
+  });
+}
