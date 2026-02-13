@@ -191,7 +191,36 @@ document.addEventListener("mousemove", (e) => {
     isMoving = false;
     if (cursorCat) cursorCat.classList.remove("walking");
   }, 150);
+
+  // Create Sparkle Trail
+  if (Math.random() < 0.3) {
+    // Limit density
+    createSparkle(e.clientX, e.clientY);
+  }
 });
+
+function createSparkle(x, y) {
+  const sparkle = document.createElement("div");
+  sparkle.className = "sparkle";
+
+  // Random small offset
+  const offsetX = (Math.random() - 0.5) * 20;
+  const offsetY = (Math.random() - 0.5) * 20;
+
+  sparkle.style.left = `${x + offsetX}px`;
+  sparkle.style.top = `${y + offsetY}px`;
+
+  // Random colors (Gold, Pink, Light Blue)
+  const colors = ["#FFD700", "#FF69B4", "#87CEEB", "#FFF"];
+  sparkle.style.backgroundColor =
+    colors[Math.floor(Math.random() * colors.length)];
+
+  document.body.appendChild(sparkle);
+
+  setTimeout(() => {
+    sparkle.remove();
+  }, 800);
+}
 
 function animateCat() {
   const dx = mouseX - catX;
@@ -337,7 +366,34 @@ function updateScrollAnimations() {
 // Event Listeners
 window.addEventListener("scroll", updateScrollAnimations);
 window.addEventListener("resize", updateScrollAnimations);
-document.addEventListener("DOMContentLoaded", updateScrollAnimations);
+document.addEventListener("DOMContentLoaded", () => {
+  updateScrollAnimations();
+
+  // ADD TILT EFFECT TO CARDS
+  const tiltElements = document.querySelectorAll(
+    ".quiz-card, .gift-frame, .chest-container",
+  );
+
+  tiltElements.forEach((el) => {
+    el.addEventListener("mousemove", (e) => {
+      const rect = el.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      const rotateX = ((y - centerY) / centerY) * -10; // Max 10deg rotation
+      const rotateY = ((x - centerX) / centerX) * 10;
+
+      el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+    });
+
+    el.addEventListener("mouseleave", () => {
+      el.style.transform = "perspective(1000px) rotateX(0) rotateY(0) scale(1)";
+    });
+  });
+});
 
 const bdayMusic = document.getElementById("bday-music");
 let musicStarted = false;
@@ -546,13 +602,12 @@ if (dialButtons.length > 0) {
   });
 }
 // --- GLOBAL CLICK EFFECTS (Sound & Popper) ---
-const clickSound = document.getElementById("click-sound");
+const clickSound = document.getElementById("pop-sound");
 
 document.addEventListener("click", (e) => {
   // 1. Play Click Sound
-  // 1. Play Click Sound
   if (clickSound) {
-    clickSound.volume = 0.2; // 20% volume for subtle effect
+    clickSound.volume = 0.3; // Gentle water drop
     clickSound.currentTime = 0;
     clickSound.play().catch(() => {});
   }

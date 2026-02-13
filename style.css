@@ -10,13 +10,36 @@ html {
 }
 
 body {
-  background: linear-gradient(135deg, #fff0f5 0%, #e6e6fa 100%);
+  background: #dfe4e5;
   color: #1a1a1a;
   overflow-x: hidden;
   transition:
     background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
     color 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   font-family: "Inter", sans-serif;
+}
+
+/* SPARKLE TRAIL */
+.sparkle {
+  position: fixed;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998; /* Below cat but above content */
+  animation: fadeSparkle 0.8s ease-out forwards;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+}
+
+@keyframes fadeSparkle {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0) translateY(20px);
+  }
 }
 
 /* CURSOR LABUBU */
@@ -66,12 +89,8 @@ body {
 }
 
 body.dark-mode {
-  background: linear-gradient(
-    135deg,
-    #2c0e18 0%,
-    #1a0b15 100%
-  ); /* Dark romantic */
-  color: #e0d0d0;
+  background: #dfe4e5; /* Keeping same to avoid video mismatch */
+  color: #1a1a1a;
 }
 
 /* SIDEBAR SCROLL TRACKER */
@@ -122,11 +141,6 @@ body.dark-mode {
   font-weight: 600;
   margin-bottom: 0.5rem;
   letter-spacing: -1px;
-  background: -webkit-linear-gradient(45deg, #ff5e62, #ff9966);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 2px 10px rgba(255, 94, 98, 0.3));
 }
 
 .scroll-cue {
@@ -269,11 +283,8 @@ body.dark-mode {
   position: relative;
   z-index: 200;
   cursor: pointer;
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.chest-container:hover {
-  transform: scale(1.1);
+  transition: transform 0.1s ease-out; /* Match tilt effect */
+  transform-style: preserve-3d;
 }
 
 .pixel-chest {
@@ -354,6 +365,8 @@ body.dark-mode {
   border-radius: 32px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   text-align: center;
+  transition: transform 0.1s ease-out; /* Super smooth following */
+  transform-style: preserve-3d;
 }
 
 .quiz-card h3 {
