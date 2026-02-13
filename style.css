@@ -10,12 +10,17 @@ html {
 }
 
 body {
-  background: #dfe4e5;
+  background: linear-gradient(135deg, #fff0f5 0%, #e6e6fa 100%);
   color: #1a1a1a;
   overflow-x: hidden;
-  transition: background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+  transition:
+    background-color 0.8s cubic-bezier(0.4, 0, 0.2, 1),
     color 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   font-family: "Inter", sans-serif;
+  cursor:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'  width='40' height='48' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>❤️</text></svg>")
+      16 0,
+    auto; /* Cute cursor attempt */
 }
 
 /* CURSOR LABUBU */
@@ -65,8 +70,12 @@ body {
 }
 
 body.dark-mode {
-  background: #dfe4e5; /* Keeping same to avoid video mismatch */
-  color: #1a1a1a;
+  background: linear-gradient(
+    135deg,
+    #2c0e18 0%,
+    #1a0b15 100%
+  ); /* Dark romantic */
+  color: #e0d0d0;
 }
 
 /* SIDEBAR SCROLL TRACKER */
@@ -414,7 +423,8 @@ body.dark-mode {
   position: absolute;
   inset: 0;
   backdrop-filter: blur(20px) contrast(0.7);
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
     linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px);
   background-size: 8px 8px;
   pointer-events: none;
@@ -433,12 +443,14 @@ body.dark-mode {
   max-width: 700px;
   padding: 4rem 3.5rem;
   background: #f4e4bc;
-  background-image: radial-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+  background-image:
+    radial-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
     linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
   background-size: 20px 20px;
   border-left: 20px solid #e2c992;
   border-right: 20px solid #e2c992;
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.1),
+  box-shadow:
+    0 0 50px rgba(0, 0, 0, 0.1),
     inset 0 0 100px rgba(139, 69, 19, 0.1);
   font-family: "Outfit", sans-serif;
   font-size: 1.25rem;
@@ -479,7 +491,8 @@ body.dark-mode {
   opacity: 0;
   transform: scaleY(0);
   transform-origin: top;
-  transition: opacity 1.5s ease,
+  transition:
+    opacity 1.5s ease,
     transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   display: none;
 }
@@ -519,7 +532,8 @@ body.dark-mode {
   width: 180px;
   height: 60px;
   background: #f4e4bc;
-  background-image: linear-gradient(
+  background-image:
+    linear-gradient(
       to right,
       #e2c992 5px,
       transparent 5px,
@@ -579,12 +593,14 @@ body.dark-mode {
   max-width: 700px;
   padding: 4rem 3.5rem;
   background: #f4e4bc;
-  background-image: radial-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+  background-image:
+    radial-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
     linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
   background-size: 20px 20px;
   border-left: 20px solid #e2c992;
   border-right: 20px solid #e2c992;
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.1),
+  box-shadow:
+    0 0 50px rgba(0, 0, 0, 0.1),
     inset 0 0 100px rgba(139, 69, 19, 0.1);
   font-family: "Outfit", sans-serif;
   font-size: 1.25rem;
@@ -625,7 +641,8 @@ body.dark-mode {
   opacity: 0;
   transform: scaleY(0);
   transform-origin: top;
-  transition: opacity 1.5s ease,
+  transition:
+    opacity 1.5s ease,
     transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -723,7 +740,9 @@ body.dark-mode {
   max-width: 260px;
   margin: 0 auto;
   text-align: center;
-  transition: opacity 1s ease, transform 1s ease;
+  transition:
+    opacity 1s ease,
+    transform 1s ease;
   position: relative;
   z-index: 10;
 }
@@ -756,9 +775,12 @@ body.dark-mode {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8),
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
     0 2px 8px rgba(0, 0, 0, 0.05);
-  transition: background 0.2s, transform 0.1s;
+  transition:
+    background 0.2s,
+    transform 0.1s;
 }
 
 .dial.soft button:active {
@@ -797,7 +819,8 @@ body.dark-mode {
   aspect-ratio: 4/5;
   object-fit: cover;
   border-radius: 16px;
-  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+  transition:
+    transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275),
     box-shadow 0.3s ease;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
@@ -934,7 +957,9 @@ body.dark-mode {
   height: auto;
   filter: blur(3px) saturate(0.8) brightness(0.95);
   opacity: 0.7;
-  transition: filter 1s ease, opacity 1s ease;
+  transition:
+    filter 1s ease,
+    opacity 1s ease;
   pointer-events: auto; /* Allow hover on the image */
 }
 
@@ -972,12 +997,15 @@ body.dark-mode {
 /* CLICK POPPER FRAGMENTS */
 .popper-fragment {
   position: fixed;
-  width: 10px;
-  height: 10px;
+  font-size: 24px;
   pointer-events: none;
   z-index: 10000;
-  border-radius: 50%;
   animation: explode 0.8s ease-out forwards;
+  /* Resetting shape styles since we use emojis now */
+  width: auto;
+  height: auto;
+  background: transparent;
+  border-radius: 0;
 }
 
 @keyframes explode {

@@ -251,7 +251,7 @@ function updateScrollAnimations() {
   const phase1Range = windowHeight * 1.5;
   const p1Progress = Math.min(
     Math.max((scrollPos - animStart) / phase1Range, 0),
-    1
+    1,
   );
 
   // Stage 2 Progress (Video to Note)
@@ -259,7 +259,7 @@ function updateScrollAnimations() {
   const p2Duration = windowHeight * 1.2;
   const p2Progress = Math.min(
     Math.max((scrollPos - p2Start) / p2Duration, 0),
-    1
+    1,
   );
 
   // --- STAGE 1: HERO TO SCENE ---
@@ -297,7 +297,7 @@ function updateScrollAnimations() {
         p1Progress > videoFadeStart
           ? Math.min(
               1,
-              (p1Progress - videoFadeStart) / (videoFadeEnd - videoFadeStart)
+              (p1Progress - videoFadeStart) / (videoFadeEnd - videoFadeStart),
             )
           : 0;
       videoWrapper.style.opacity = videoOpacity;
@@ -452,7 +452,7 @@ if (dialButtons.length > 0) {
 
           // Gift Toggle Logic
           const mathQuizContainer = document.getElementById(
-            "math-quiz-container"
+            "math-quiz-container",
           );
           const mathQuestionText =
             document.getElementById("math-question-text");
@@ -509,7 +509,7 @@ if (dialButtons.length > 0) {
             }
 
             const shuffledOptions = Array.from(options).sort(
-              () => Math.random() - 0.5
+              () => Math.random() - 0.5,
             );
 
             if (mathOptionsContainer) {
@@ -560,23 +560,17 @@ document.addEventListener("click", (e) => {
 });
 
 function createPopper(x, y) {
-  const colors = [
-    "#ff595e",
-    "#ffca3a",
-    "#8ac926",
-    "#1982c4",
-    "#6a4c93",
-    "#ff924c",
-  ];
+  const emojis = ["❤️", "💖", "💝", "💕", "💗", "💓"];
   const fragmentCount = 12;
 
   for (let i = 0; i < fragmentCount; i++) {
     const fragment = document.createElement("div");
     fragment.className = "popper-fragment";
 
-    // Random appearance
-    const color = colors[Math.floor(Math.random() * colors.length)];
-    fragment.style.backgroundColor = color;
+    // Random emoji content
+    fragment.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    fragment.style.backgroundColor = "transparent"; // Remove background color
+    fragment.style.fontSize = Math.random() * 1.5 + 1 + "rem"; // Random size
 
     // Position at click
     fragment.style.left = `${x}px`;
@@ -587,6 +581,9 @@ function createPopper(x, y) {
     const ty = (Math.random() - 0.5) * 200;
     fragment.style.setProperty("--tx", `${tx}px`);
     fragment.style.setProperty("--ty", `${ty}px`);
+
+    // Add heart-specific animation class if needed, or rely on existing popper css
+    // We need to ensure popper-fragment in CSS supports text content properly
 
     document.body.appendChild(fragment);
 
