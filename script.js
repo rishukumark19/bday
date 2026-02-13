@@ -550,7 +550,9 @@ const clickSound = document.getElementById("click-sound");
 
 document.addEventListener("click", (e) => {
   // 1. Play Click Sound
+  // 1. Play Click Sound
   if (clickSound) {
+    clickSound.volume = 0.2; // 20% volume for subtle effect
     clickSound.currentTime = 0;
     clickSound.play().catch(() => {});
   }
